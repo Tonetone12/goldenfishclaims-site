@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Escape Hell</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: white;
+      font-family: monospace;
+      text-align: center;
+    }
+    canvas {
+      display: block;
+      margin: 20px auto;
+      background: #550000;
+      border: 4px solid red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Escape Hell!</h1>
+  <p>Use arrow keys to dodge the flames and reach the top!</p>
+  <canvas id="game" width="320" height="320"></canvas>
+  <audio id="bbqSound" src="https://upload.wikimedia.org/wikipedia/commons/1/12/Sizzle.ogg"></audio>
+  <audio id="escapeSound" src="https://upload.wikimedia.org/wikipedia/commons/3/37/Bell-ringing.ogg"></audio>
+  <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+    const tileSize = 32;
+    const player = { x: 5, y: 9 };
+    const flames = [];
+
+    const bbqSound = document.getElementById("bbqSound");
+    const escapeSound = document.getElementById("escapeSound");
+
+    const sprite = [
+      "..###..",
+      ".#####.",
+      "#######",
+      "##.#.##",
+      ".#.#.#."
+    ];
+
+    function drawPlayer() {
+      for (let row = 0; row < sprite.length; row++) {
+        for (let col = 0; col < sprite[row].length; col++) {
+          if (sprite[row][col] === "#") {
+            ctx.fillStyle = "#FFD700";
+            ctx.fillRect((player.x * tileSize) + col * 4, (player.y * tileSize) + row * 4, 4, 4);
+          }
+        }
+      }
+    }
+
+    function drawFlames() {
+      ctx.fillStyle = "#FF3300";
+      flames.forEach(f => {
+        ctx.fillRect(f.x * tileSize, f.y * tileSize, tileSize, tileSize);
+      });
+    }
+
+    function updateFlames() {
+      flames.forEach(f => f.y++);
+      if (Math.random() < 0.3) {
+        flames.push({ x: Math.floor(Math.random() * 10), y: 0 });
+      }
+      for (let f of flames) {
+        if (f.x === player.x && f.y === player.y) {
+          bbqSound.play();
+          alert("YOU GOT BBQ'D");
+          location.reload();
+        }
+      }
+    }
+
+    function drawGrid() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = "#300";
+      for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 10; j++) {
+          ctx.strokeRect(i * tileSize, j * tileSize, tileSize, tileSize);
+        }
+      }
+    }
+
+    function gameLoop() {
+      drawGrid();
+      drawFlames();
+      drawPlayer();
+      updateFlames();
+      if (player.y === 0) {
+        escapeSound.play();
+        alert("YOU ESCAPED HELL!");
+        location.reload();
+      }
+    }
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft" && player.x > 0) player.x--;
+      if (e.key === "ArrowRight" && player.x < 9) player.x++;
+      if (e.key === "ArrowUp" && player.y > 0) player.y--;
+      if (e.key === "ArrowDown" && player.y < 9) player.y++;
+    });
+
+    setInterval(gameLoop, 300);
+  </script>
+</body>
+</html>

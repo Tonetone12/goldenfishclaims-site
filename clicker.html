@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Golden Fish Clicker</title>
+  <style>
+    body {
+      background-color: #fffbe6;
+      color: #333;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    #fish {
+      width: 200px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    #counter {
+      font-size: 2em;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Golden Fish Clicker</h1>
+  <p>Click the fish. Get rich. Question your life choices.</p>
+  <img id="fish" src="https://i.imgur.com/FaI9Ilo.png" alt="Golden Fish">
+  <div id="counter">Clicks: 0</div>
+
+  <script>
+    let count = 0;
+    const counter = document.getElementById("counter");
+    document.getElementById("fish").addEventListener("click", () => {
+      count++;
+      counter.textContent = "Clicks: " + count;
+    });
+  </script>
+</body>
+</html>
